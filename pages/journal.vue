@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-full gap-3 pt-4 overflow-y-hidden">
-    <div class="flex flex-col items-stretch rounded-3xl mx-4 px-4 lg:mx-0 bg-white dark:bg-stone-950">
+    <div v-if="hasDreams" class="flex flex-col items-stretch rounded-3xl mx-4 px-4 lg:mx-0 bg-white dark:bg-stone-950">
       <div class="flex items-stretch w-full">
         <MagnifyingGlassIcon class="w-6 h-6 shrink-0 my-auto"/>
         <input v-model="searchStore.term"
@@ -16,18 +16,23 @@
       <TagDropdown ref="tagDropdown" v-model="searchStore.tags" v-model:open="searchStore.filterOpen" @update="search"/>
     </div>
 
-    <Fader class="grow text-cloud dark:text-stone-900" vertical>
-      <div class="h-full overflow-y-auto text-stone-950 dark:text-white flex flex-col" data-scrollable="search">
-        <EmptyState v-if="loaded && searchStore.results.length === 0" :icon="MagnifyingGlassIcon" label="Search"
-                    :title="isFiltering ? 'No dreams found' : 'No dreams yet'">
-          {{
-            isFiltering
-                ? 'Try a different search term or remove some filters.'
-                : 'Once you log dreams, you can search them by text and tags here.'
-          }}
-        </EmptyState>
-        <Dream v-for="dream in searchStore.results" :key="dream.id!" :dream="dream"
-               class="last:border-none border-b-4 border-b-white dark:border-b-stone-950 lg:border-b-2"/>
+    <EmptyState v-if="loaded && !hasDreams" title="No dreams yet">
+      Write down your first dream while you still remember it.
+    </EmptyState>
+
+    <Fader v-else class="grow text-cloud dark:text-stone-900" vertical>
+      <div class="h-full overflow-y-auto text-stone-950 dark:text-white" data-scrollable="journal">
+        <template v-if="isFiltering">
+          <EmptyState v-if="searched && searchStore.results.length === 0" :action="false" title="No dreams found">
+            Try a different search term or remove some filters.
+          </EmptyState>
+          <Dream v-for="dream in searchStore.results" :key="dream.id!" :dream="dream"
+                 class="last:border-none border-b-4 border-b-white dark:border-b-stone-950 lg:border-b-2"/>
+        </template>
+        <InfiniteScroller v-else :bottom="0" @bottom="fetchNewPage">
+          <Dream v-for="dream in dreamsStore.dreams" :key="dream.id!" :dream="dream"
+                 class="last-of-type:border-none border-b-4 border-white dark:border-stone-950 lg:border-b-2"/>
+        </InfiniteScroller>
       </div>
     </Fader>
   </div>
@@ -37,7 +42,6 @@
 import {FunnelIcon, MagnifyingGlassIcon} from '@heroicons/vue/24/outline';
 import type {TagDropdown} from "#components";
 import {useSearchStore} from "stores/search";
-import {onBeforeUnmount} from "vue";
 import {setPageScrollPositions} from "stores/scroll";
 
 definePageMeta({
@@ -63,20 +67,34 @@ onBeforeRouteLeave((to, from, next) => {
   next()
 })
 
+const dreamsStore = useDreamsStore()
 const searchStore = useSearchStore()
 
 const tagDropdown = ref<typeof TagDropdown>()
 
 const loaded = ref(false)
+const searched = ref(false)
+
+const hasDreams = computed(() => dreamsStore.dreams.length > 0)
 const isFiltering = computed(() => searchStore.term.trim() !== '' || searchStore.tags.length > 0)
 
 onBeforeMount(async () => {
-  await search()
+  await fetchNewPage()
   loaded.value = true
+  if (isFiltering.value) await search()
 })
 
-const search = async () => {
-  await searchStore.search()
+let page = 1
+const fetchNewPage = async () => {
+  if (await dreamsStore.fetch(page)) page++
 }
 
+const search = async () => {
+  if (!isFiltering.value) {
+    searched.value = false
+    return
+  }
+  await searchStore.search()
+  searched.value = true
+}
 </script>

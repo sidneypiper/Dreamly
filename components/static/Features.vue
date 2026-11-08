@@ -12,10 +12,10 @@
       <h2 class="text-4xl font-medium tracking-tight col-span-full text-center">Features</h2>
       <div class="flex flex-row gap-4 items-start md:items-center justify-center md:justify-end h-full">
         <BookOutline class="w-8 h-8"/>
-        <h2 class="text-2xl hidden md:block">Home</h2>
+        <h2 class="text-2xl hidden md:block">Journal</h2>
       </div>
       <div class="flex flex-col gap-1 cols-span-2 ">
-        <h2 class="text-2xl md:hidden">Home</h2>
+        <h2 class="text-2xl md:hidden">Journal</h2>
         <p class="text-lg col-span-2">Wander through your dreams, scrolling effortlessly to revisit or edit each
           entry.</p>
       </div>

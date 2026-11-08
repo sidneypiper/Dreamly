@@ -14,7 +14,7 @@
         </LabeledText>
         <div class="space-y-1">
           <div class="flex flex-row gap-2 items-center">
-            <h2 class="text-xl font-bold">Home Page</h2>
+            <h2 class="text-xl font-bold">Journal</h2>
             <BookOutline class="w-6 h-6"/>
           </div>
           <p>This is where you'll find your dreams displayed in chronological order. You can scroll through past
@@ -26,7 +26,7 @@
             <h2 class="text-xl font-bold">Search & Filter</h2>
             <MagnifyingGlassOutline class="w-6 h-6"/>
           </div>
-          <p>Use the Search function to quickly find a specific dream or explore recurring themes. You can also filter
+          <p>Use the search bar at the top of your Journal to quickly find a specific dream or explore recurring themes. You can also filter
             dreams by tags, making it easier to analyze patterns or revisit specific types of dreams (e.g., nightmares,
             lucid dreams, recurring symbols).</p>
         </div>

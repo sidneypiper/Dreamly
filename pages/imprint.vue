@@ -16,7 +16,7 @@ definePageMeta({
   middleware: 'auth',
   auth: {
     unauthenticatedOnly: true,
-    navigateAuthenticatedTo: '/home',
+    navigateAuthenticatedTo: '/journal',
   },
 })
 </script>
