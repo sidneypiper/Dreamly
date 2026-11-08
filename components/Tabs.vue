@@ -37,7 +37,7 @@
     <NuxtLink
         class="hidden grow lg:py-2 lg:mt-4 lg:flex items-center justify-center relative bg-stone-950 dark:bg-white text-white dark:text-stone-950 rounded-full"
         to="/dream">
-      <p class="hidden lg:block text-lg font-semibold">Create</p>
+      <p class="hidden lg:block text-lg font-semibold">Log dream</p>
     </NuxtLink>
   </div>
 </template>

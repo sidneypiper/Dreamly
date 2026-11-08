@@ -23,7 +23,7 @@
     <Fader v-else class="grow text-cloud dark:text-stone-900" vertical>
       <div class="h-full overflow-y-auto text-stone-950 dark:text-white" data-scrollable="journal">
         <template v-if="isFiltering">
-          <EmptyState v-if="searched && searchStore.results.length === 0" :action="false" title="No dreams found">
+          <EmptyState v-if="searched && searchStore.results.length === 0" title="No dreams found">
             Try a different search term or remove some filters.
           </EmptyState>
           <Dream v-for="dream in searchStore.results" :key="dream.id!" :dream="dream"
