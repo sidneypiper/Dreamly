@@ -3,7 +3,9 @@
     <div id="editor-title"
          ref="titleRef"
          :contenteditable="editable"
-         class="text-3xl resize-none break-words pt-0 text-wrap px-4 font-bold pb-0 border-0 block w-full focus:border-none focus:ring-0 focus:shadow-none focus:outline-0 bg-transparent"
+         :class="{'title-placeholder': titleEmpty && editable}"
+         data-placeholder="What did you dream?"
+         class="relative text-3xl resize-none break-words pt-0 text-wrap px-4 font-bold pb-0 border-0 block w-full focus:border-none focus:ring-0 focus:shadow-none focus:outline-0 bg-transparent"
          tabindex="0" type="text"
          @input="calcTitleEmpty"
          @keydown.down.prevent="down"
@@ -11,7 +13,8 @@
          @keydown.enter.prevent="handleInputEnter">{{ dream?.title }}
     </div>
     <textarea id="editor-content" ref="contentRef" :readonly="titleEmpty || !props.editable"
-              class="block grow px-4 w-full min-h-fit resize-none pt-0 border-0 cursor-text focus:border-none focus:ring-0 bg-transparent"
+              :placeholder="editable ? 'Write it down before it fades. Where were you, who was there, how did it feel?' : ''"
+              class="placeholder:text-current placeholder:opacity-40 block grow px-4 w-full min-h-fit resize-none pt-0 border-0 cursor-text focus:border-none focus:ring-0 bg-transparent"
               @keydown.up="up"
               @keydown.left="left"
               @keydown.backspace="left"
@@ -143,3 +146,12 @@ defineExpose<{
   reset
 })
 </script>
+
+<style scoped>
+.title-placeholder::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  opacity: 0.4;
+  pointer-events: none;
+}
+</style>

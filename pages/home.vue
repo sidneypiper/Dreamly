@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="flex flex-col items-stretch">
+    <EmptyState v-if="loaded && dreamsStore.dreams.length === 0" :icon="MoonIcon" label="Dream journal"
+                title="No dreams yet">
+      Write down your first dream while you still remember it.
+    </EmptyState>
+    <div v-else class="flex flex-col items-stretch">
       <InfiniteScroller :bottom="0" @bottom="fetchNewPage">
         <Dream v-for="dream in dreamsStore.dreams" :key="dream.id!" :dream="dream"
                class="last-of-type:border-none border-b-4 border-white dark:border-stone-950 lg:border-b-2"
@@ -12,6 +16,7 @@
 
 <script lang="ts" setup>
 import type {TagWithColor} from "~/prisma/types"
+import {MoonIcon} from "@heroicons/vue/24/outline";
 import {onBeforeUnmount} from "vue";
 import {setPageScrollPositions} from "stores/scroll";
 
@@ -43,8 +48,11 @@ const selectedTags = ref<TagWithColor[]>([])
 const dreamsStore = useDreamsStore()
 const route = useRoute()
 
+const loaded = ref(false)
+
 onBeforeMount(async () => {
   await fetchNewPage()
+  loaded.value = true
 })
 
 const handleTagClick = (tag: TagWithColor) => {

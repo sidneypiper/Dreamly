@@ -17,7 +17,15 @@
     </div>
 
     <Fader class="grow text-cloud dark:text-stone-900" vertical>
-      <div class="h-full overflow-y-auto text-stone-950 dark:text-white" data-scrollable="search">
+      <div class="h-full overflow-y-auto text-stone-950 dark:text-white flex flex-col" data-scrollable="search">
+        <EmptyState v-if="loaded && searchStore.results.length === 0" :icon="MagnifyingGlassIcon" label="Search"
+                    :title="isFiltering ? 'No dreams found' : 'No dreams yet'">
+          {{
+            isFiltering
+                ? 'Try a different search term or remove some filters.'
+                : 'Once you log dreams, you can search them by text and tags here.'
+          }}
+        </EmptyState>
         <Dream v-for="dream in searchStore.results" :key="dream.id!" :dream="dream"
                class="last:border-none border-b-4 border-b-white dark:border-b-stone-950 lg:border-b-2"/>
       </div>
@@ -59,8 +67,12 @@ const searchStore = useSearchStore()
 
 const tagDropdown = ref<typeof TagDropdown>()
 
+const loaded = ref(false)
+const isFiltering = computed(() => searchStore.term.trim() !== '' || searchStore.tags.length > 0)
+
 onBeforeMount(async () => {
   await search()
+  loaded.value = true
 })
 
 const search = async () => {

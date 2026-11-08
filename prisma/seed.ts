@@ -5,7 +5,6 @@ import {DateTime} from "luxon";
 const prisma = new PrismaClient()
 
 async function main() {
-    const colors = ['#FDE4CF', '#FFCFD2', '#F1C0E8', '#CFBAF0', '#A3C4F3', '#90DBF4', '#8EECF5', '#98F5E1', '#B9FBC0']
     const tags = ['OCaml', 'Monade', 'Funktor', 'Nuxt', 'Party Nuts', 'Haskell', 'Sigma', 'NSFW', 'Rust']
     const dreams = [{
         title: 'Das Labyrinth der Haskell-Herausforderung',
@@ -44,13 +43,10 @@ async function main() {
         }
     })
 
-    for (const hex of colors) {
-        const color = await prisma.color.create({
-            data: {
-                hex: hex
-            }
-        })
+    // colors are inserted by the seed_colors migration
+    const colors = await prisma.color.findMany()
 
+    for (const color of colors) {
         const tag = await prisma.tag.create({
             data: {
                 label: tags.shift()!,
